@@ -29,20 +29,22 @@ pipeline {
         stage('Create Virtual Environment') {
             steps {
                 script {
-                    // Install pip if not already installed
-                    def pipInstalled = sh(script: 'command -v pip', returnStatus: true) == 0
-                    if (!pipInstalled) {
-                        sh 'sudo apt-get update && sudo apt-get install -y python3-pip'
+                    dir('TorrentVisitor') {
+                        // Install pip if not already installed
+                        def pipInstalled = sh(script: 'command -v pip', returnStatus: true) == 0
+                        if (!pipInstalled) {
+                            sh 'sudo apt-get update && sudo apt-get install -y python3-pip'
+                        }
+
+                        // Create a virtual environment in the TorrentVisitor directory
+                        sh 'python3 -m venv TorrentVisitor/venv'
+
+                        // Activate the virtual environment
+                        sh 'source TorrentVisitor/venv/bin/activate'
+
+                        // Install requirements.txt within the virtual environment
+                        sh 'pip3 install -r TorrentVisitor/requirements.txt'
                     }
-
-                    // Create a virtual environment in the TorrentVisitor directory
-                    sh 'python3 -m venv TorrentVisitor/venv'
-
-                    // Activate the virtual environment
-                    sh 'source TorrentVisitor/venv/bin/activate'
-
-                    // Install requirements.txt within the virtual environment
-                    sh 'pip3 install -r TorrentVisitor/requirements.txt'
                 }
             }
         }
