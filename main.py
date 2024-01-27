@@ -26,7 +26,7 @@ class ChromeDriver:
     def create_chrome_driver(self):
         """Create a webdriver.Chrome instance with the specified configurations."""
         logging.info('Loading Chrome Driver')
-        service = Service(self.driver_path, log_path='log.log')
+        service = Service(self.driver_path)
         return webdriver.Chrome(service=service, options=self.chrome_options)
     
     def is_driver_valid(self, driver):
@@ -116,7 +116,7 @@ def main() -> None:
     website = Website(
         urls=[
             'https://www.torrentleech.me/user/account/login/',
-            'https://www.torrentleech.me/profile/davidam88/achievements'
+            f'https://www.torrentleech.me/profile/{os.getenv("TOR_USER")}/achievements'
         ],
         title='TorrentLeech.org',
         elements={
@@ -157,6 +157,7 @@ def main() -> None:
     driver.refresh()
     driver.quit()
     logging.info("Program finished successfully!!!")
+    exit(0)
         
     
 if __name__ == "__main__":
