@@ -13,11 +13,6 @@ pipeline {
                 script {
                     def repoDir = 'TorrentVisitor'
                     def repoExists = fileExists(repoDir)
-                    
-                    echo '*************'
-                    echo 'before'
-                    sh 'whoami && pwd'
-                    echo '*************'
 
                     if (!repoExists) {
                         echo "Cloning the Git repository..."
@@ -27,11 +22,6 @@ pipeline {
                         sh "rm -rf ${repoDir}"
                         sh 'git clone https://github.com/david1x/TorrentVisitor.git'
                     }
-
-                    echo '*************'
-                    echo 'after'
-                    sh 'whoami && pwd'
-                    echo '*************'
                 }
             }
         }
@@ -39,15 +29,7 @@ pipeline {
         stage('Create Virtual Environment') {
             steps {
                 script {
-                    echo '*************'
-                    echo 'before'
-                    sh 'whoami && pwd'
-                    echo '*************'
                     dir('TorrentVisitor') {
-                        echo '*************'
-                        echo 'after and before venv'
-                        sh 'whoami && pwd'
-                        echo '*************'
                         // Install pip if not already installed
                         def pipInstalled = sh(script: 'command -v pip', returnStatus: true) == 0
                         if (!pipInstalled) {
@@ -58,15 +40,10 @@ pipeline {
                         sh 'python3 -m venv venv'
                         sh 'ls -lha'
                         // Activate the virtual environment
-                        sh 'source venv/bin/activate'
+                        sh '. venv/bin/activate'
 
                         // Install requirements.txt within the virtual environment
                         sh 'pip3 install -r requirements.txt'
-
-                        echo '*************'
-                        echo 'after venv'
-                        sh 'whoami && pwd'
-                        echo '*************'
                     }
                 }
             }
@@ -75,15 +52,7 @@ pipeline {
         stage('Run') {
             steps {
                 script {
-                    echo '*************'
-                    echo 'before'
-                    sh 'whoami && pwd'
-                    echo '*************'
                     dir('TorrentVisitor') {
-                        echo '*************'
-                        echo 'after'
-                        sh 'whoami && pwd'
-                        echo '*************'
                         sh "python3 main.py"
                     }
                 }
