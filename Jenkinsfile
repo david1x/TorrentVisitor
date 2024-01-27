@@ -47,7 +47,15 @@ pipeline {
         stage('Cleanup') {
             steps {
                 script {
-                    def folders = ['/tmp/workspace/TorrentHeadless', '/tmp/workspace/TorrentHeadless@tmp']
+                    def fileExists(String filePath) {
+                        def file = new File(filePath)
+                        return file.exists()
+                    }
+                    
+                    def folders = [
+                        '/tmp/workspace/TorrentHeadless',
+                        '/tmp/workspace/TorrentHeadless@tmp'
+                    ]
 
                     // Loop through each folder
                     folders.each { targetFolder ->
@@ -63,5 +71,11 @@ pipeline {
             }
         }
 
+    }
+    
+    post {
+        always {
+            cleanWs()
+        }
     }
 }
