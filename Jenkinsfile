@@ -36,6 +36,7 @@ pipeline {
                             sh 'sudo apt-get update && sudo apt-get install -y python3-pip'
                         }
 
+                        sh 'sudo apt install python3.10-venv'
                         // Create a virtual environment in the TorrentVisitor directory
                         sh 'python3 -m venv TorrentVisitor/venv'
 
