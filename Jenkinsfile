@@ -66,17 +66,12 @@ pipeline {
     }
 }
 
-// Function to check if a file or folder exists
-def fileExists(String path) {
-    return file(path).exists()
-}
-
 // Function to cleanup folders
 def cleanupFolders(List<String> folders) {
     // Loop through each folder
     folders.each { targetFolder ->
         // Check if the folder exists before attempting cleanup
-        if (fileExists(targetFolder)) {
+        if (new File(targetFolder).exists()) {
             sh "rm -rf ${targetFolder}"
             echo "Cleanup for ${targetFolder} completed successfully."
         } else {
