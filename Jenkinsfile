@@ -23,7 +23,7 @@ pipeline {
                 //         sh "rm -rf ${repoDir}"
                 //         sh 'git clone https://github.com/david1x/TorrentVisitor.git'
                 //     }
-                // }
+                }
             }
         }
 
