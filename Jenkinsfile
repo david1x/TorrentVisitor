@@ -45,7 +45,7 @@ pipeline {
                     echo '*************'
                     dir('TorrentVisitor') {
                         echo '*************'
-                        echo 'after'
+                        echo 'after and before venv'
                         sh 'whoami && pwd'
                         echo '*************'
                         // Install pip if not already installed
@@ -55,13 +55,18 @@ pipeline {
                         }
 
                         // Create a virtual environment in the TorrentVisitor directory
-                        sh 'python3 -m venv TorrentVisitor/venv'
+                        sh 'python3 -m venv venv'
                         sh 'ls -lha'
                         // Activate the virtual environment
-                        sh 'source TorrentVisitor/TorrentVisitor/venv/bin/activate'
+                        sh 'source venv/bin/activate'
 
                         // Install requirements.txt within the virtual environment
-                        sh 'pip3 install -r TorrentVisitor/requirements.txt'
+                        sh 'pip3 install -r requirements.txt'
+
+                        echo '*************'
+                        echo 'after venv'
+                        sh 'whoami && pwd'
+                        echo '*************'
                     }
                 }
             }
