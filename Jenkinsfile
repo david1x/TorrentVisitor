@@ -11,18 +11,19 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    def repoDir = 'TorrentVisitor'
-                    def repoExists = fileExists(repoDir)
+                    checkout scm
+                //     def repoDir = 'TorrentVisitor'
+                //     def repoExists = fileExists(repoDir)
 
-                    if (!repoExists) {
-                        echo "Cloning the Git repository..."
-                        sh 'git clone https://github.com/david1x/TorrentVisitor.git'
-                    } else {
-                        echo "Repository already exists. Removing existing repository and cloning a fresh copy."
-                        sh "rm -rf ${repoDir}"
-                        sh 'git clone https://github.com/david1x/TorrentVisitor.git'
-                    }
-                }
+                //     if (!repoExists) {
+                //         echo "Cloning the Git repository..."
+                //         sh 'git clone https://github.com/david1x/TorrentVisitor.git'
+                //     } else {
+                //         echo "Repository already exists. Removing existing repository and cloning a fresh copy."
+                //         sh "rm -rf ${repoDir}"
+                //         sh 'git clone https://github.com/david1x/TorrentVisitor.git'
+                //     }
+                // }
             }
         }
 
@@ -55,6 +56,14 @@ pipeline {
                     dir('TorrentVisitor') {
                         sh "python3 main.py"
                     }
+                }
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                script {
+                    sh 'rm -rf /tmp/workspace/TorrentHeadless /tmp/workspace/TorrentHeadless@tmp'
                 }
             }
         }
