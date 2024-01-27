@@ -42,7 +42,7 @@ pipeline {
 
                         // Create a virtual environment in the TorrentVisitor directory
                         sh 'python3 -m venv TorrentVisitor/venv'
-
+                        sh 'ls -lha'
                         // Activate the virtual environment
                         sh 'source TorrentVisitor/venv/bin/activate'
 
