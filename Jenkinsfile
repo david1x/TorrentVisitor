@@ -12,17 +12,6 @@ pipeline {
             steps {
                 script {
                     checkout scm
-                //     def repoDir = 'TorrentVisitor'
-                //     def repoExists = fileExists(repoDir)
-
-                //     if (!repoExists) {
-                //         echo "Cloning the Git repository..."
-                //         sh 'git clone https://github.com/david1x/TorrentVisitor.git'
-                //     } else {
-                //         echo "Repository already exists. Removing existing repository and cloning a fresh copy."
-                //         sh "rm -rf ${repoDir}"
-                //         sh 'git clone https://github.com/david1x/TorrentVisitor.git'
-                //     }
                 }
             }
         }
@@ -30,22 +19,19 @@ pipeline {
         stage('Create Virtual Environment') {
             steps {
                 script {
-                    // dir('TorrentVisitor') {
                     // Install pip if not already installed
                     def pipInstalled = sh(script: 'command -v pip', returnStatus: true) == 0
                     if (!pipInstalled) {
                         sh 'sudo apt-get update && sudo apt-get install -y python3-pip'
                     }
-
                     // Create a virtual environment in the TorrentVisitor directory
                     sh 'python3 -m venv venv'
-                    sh 'ls -lha'
+
                     // Activate the virtual environment
                     sh '. venv/bin/activate'
 
                     // Install requirements.txt within the virtual environment
                     sh 'pip3 install -r requirements.txt'
-                    // }
                 }
             }
         }
@@ -53,9 +39,7 @@ pipeline {
         stage('Run') {
             steps {
                 script {
-                    // dir('TorrentVisitor') {
                     sh "python3 main.py"
-                    // }
                 }
             }
         }
@@ -63,7 +47,18 @@ pipeline {
         stage('Cleanup') {
             steps {
                 script {
-                    sh 'rm -rf /tmp/workspace/TorrentHeadless /tmp/workspace/TorrentHeadless@tmp'
+                    def folders = ['/tmp/workspace/TorrentHeadless', '/tmp/workspace/TorrentHeadless@tmp']
+
+                    // Loop through each folder
+                    folders.each { targetFolder ->
+                        // Check if the folder exists before attempting cleanup
+                        if (fileExists(targetFolder)) {
+                            sh "rm -rf ${targetFolder}"
+                            echo "Cleanup for ${targetFolder} completed successfully."
+                        } else {
+                            echo "Folder ${targetFolder} does not exist. No cleanup needed."
+                        }
+                    }
                 }
             }
         }
