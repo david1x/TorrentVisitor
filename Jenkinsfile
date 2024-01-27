@@ -13,7 +13,6 @@ pipeline {
                 script {
                     def repoDir = 'TorrentVisitor'
                     def repoExists = fileExists(repoDir)
-                    def pipInstalled = sh(script: 'command -v pip', returnStatus: true) == 0
 
                     if (!repoExists) {
                         echo "Cloning the Git repository..."
@@ -23,24 +22,35 @@ pipeline {
                         sh "rm -rf ${repoDir}"
                         sh 'git clone https://github.com/david1x/TorrentVisitor.git'
                     }
-
-                    // Install pip if not already installed
-                    if (!pipInstalled) {
-                        sh 'sudo apt-get update && sudo apt-get install -y python3-pip'
-                    }
-
-                    // Install requirements.txt on the Jenkins agent node
-                    sh 'sudo pip3 install -r TorrentVisitor/requirements.txt'
                 }
             }
         }
 
+        stage('Create Virtual Environment') {
+            steps {
+                script {
+                    // Install pip if not already installed
+                    def pipInstalled = sh(script: 'command -v pip', returnStatus: true) == 0
+                    if (!pipInstalled) {
+                        sh 'sudo apt-get update && sudo apt-get install -y python3-pip'
+                    }
+
+                    // Create a virtual environment in the TorrentVisitor directory
+                    sh 'python3 -m venv TorrentVisitor/venv'
+
+                    // Activate the virtual environment
+                    sh 'source TorrentVisitor/venv/bin/activate'
+
+                    // Install requirements.txt within the virtual environment
+                    sh 'pip3 install -r TorrentVisitor/requirements.txt'
+                }
+            }
+        }
 
         stage('Run') {
             steps {
                 script {
                     dir('TorrentVisitor') {
-                        sh 'env | grep TOR_'
                         sh "python3 main.py"
                     }
                 }
