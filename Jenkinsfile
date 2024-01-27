@@ -11,7 +11,18 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    checkout scm
+                    def repoDir = 'TorrentVisitor'
+                    def repoExists = fileExists(repoDir)
+                    def pipInstalled = sh(script: 'command -v pip', returnStatus: true) == 0
+
+                    if (!repoExists) {
+                        echo "Cloning the Git repository..."
+                        sh 'git clone https://github.com/david1x/TorrentVisitor.git'
+                    } else {
+                        echo "Repository already exists. Removing existing repository and cloning a fresh copy."
+                        sh "rm -rf ${repoDir}"
+                        sh 'git clone https://github.com/david1x/TorrentVisitor.git'
+                    }
                 }
             }
         }
@@ -19,29 +30,35 @@ pipeline {
         stage('Create Virtual Environment') {
             steps {
                 script {
-                    // Install pip if not already installed
-                    def pipInstalled = sh(script: 'command -v pip', returnStatus: true) == 0
-                    if (!pipInstalled) {
-                        sh 'sudo apt-get update && sudo apt-get install -y python3-pip'
+                    dir('TorrentVisitor') {
+                        // Install pip if not already installed
+                        def pipInstalled = sh(script: 'command -v pip', returnStatus: true) == 0
+                        if (!pipInstalled) {
+                            sh 'sudo apt-get update && sudo apt-get install -y python3-pip'
+                        }
+    
+                        // Create a virtual environment in the TorrentVisitor directory
+                        sh 'python3 -m venv venv'
+    
+                        // Activate the virtual environment
+                        sh '. venv/bin/activate'
+    
+                        // Install requirements.txt within the virtual environment
+                        sh 'pip3 install -r requirements.txt'
                     }
-
-                    // Create a virtual environment in the TorrentVisitor directory
-                    sh 'python3 -m venv venv'
-
-                    // Activate the virtual environment
-                    sh '. venv/bin/activate'
-
-                    // Install requirements.txt within the virtual environment
-                    sh 'pip3 install -r requirements.txt'
+                    
                 }
             }
         }
 
         stage('Run') {
             steps {
-                script {
-                    // Use double quotes to interpolate variables
-                    sh "python3 main.py"
+                dir('TorrentVisitor') {
+                    script {
+                        // Use double quotes to interpolate variables
+                        sh "python3 main.py"
+                    }
+                    
                 }
             }
         }
@@ -49,7 +66,11 @@ pipeline {
         stage('Cleanup') {
             steps {
                 script {
-                    cleanupFolders(['/tmp/workspace/TorrentHeadless', '/tmp/workspace/TorrentHeadless@tmp'])
+                    def repoDir = 'TorrentVisitor'
+                    sh 'pwd'
+                    echo "Deleting Running Folder..."
+                    sh "rm -rf ${repoDir}"
+                    sh "rm -rf ${repoDir}@tmp"
                 }
             }
         }
@@ -58,24 +79,21 @@ pipeline {
     post {
         always {
             script {
-                // Deactivate the virtual environment
-                sh 'deactivate'
+                // Check if virtual environment is activated before deactivating
+                if (sh(script: '[[ -n "$VIRTUAL_ENV" ]]', returnStatus: true) == 0) {
+                    sh 'deactivate'
+                    echo 'Deactivated the virtual environment.'
+                } else {
+                    echo 'No virtual environment is currently activated. Skipping deactivation.'
+                }
+                cleanWs(cleanWhenNotBuilt: false,
+                        deleteDirs: true,
+                        disableDeferredWipeout: true,
+                        notFailBuild: true,
+                        patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
+                                   [pattern: '.propsfile', type: 'EXCLUDE']])
             }
-            cleanupFolders(['/tmp/workspace/TorrentHeadless', '/tmp/workspace/TorrentHeadless@tmp'])
         }
     }
 }
 
-// Function to cleanup folders
-def cleanupFolders(List<String> folders) {
-    // Loop through each folder
-    folders.each { targetFolder ->
-        // Check if the folder exists before attempting cleanup
-        if (new File(targetFolder).exists()) {
-            sh "rm -rf ${targetFolder}"
-            echo "Cleanup for ${targetFolder} completed successfully."
-        } else {
-            echo "Folder ${targetFolder} does not exist. No cleanup needed."
-        }
-    }
-}
