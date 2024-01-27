@@ -24,6 +24,7 @@ pipeline {
                     if (!pipInstalled) {
                         sh 'sudo apt-get update && sudo apt-get install -y python3-pip'
                     }
+
                     // Create a virtual environment in the TorrentVisitor directory
                     sh 'python3 -m venv venv'
 
@@ -39,6 +40,7 @@ pipeline {
         stage('Run') {
             steps {
                 script {
+                    // Use double quotes to interpolate variables
                     sh "python3 main.py"
                 }
             }
@@ -47,34 +49,38 @@ pipeline {
         stage('Cleanup') {
             steps {
                 script {
-                    def folders = [
-                        '/tmp/workspace/TorrentHeadless',
-                        '/tmp/workspace/TorrentHeadless@tmp'
-                    ]
-
-                    // Loop through each folder
-                    folders.each { targetFolder ->
-                        // Check if the folder exists before attempting cleanup
-                        if (fileExists(targetFolder)) {
-                            sh "rm -rf ${targetFolder}"
-                            echo "Cleanup for ${targetFolder} completed successfully."
-                        } else {
-                            echo "Folder ${targetFolder} does not exist. No cleanup needed."
-                        }
-                    }
+                    cleanupFolders(['/tmp/workspace/TorrentHeadless', '/tmp/workspace/TorrentHeadless@tmp'])
                 }
             }
         }
-
     }
-    
+
     post {
         always {
-            cleanWs()
+            script {
+                // Deactivate the virtual environment
+                sh 'deactivate'
+            }
+            cleanupFolders(['/tmp/workspace/TorrentHeadless', '/tmp/workspace/TorrentHeadless@tmp'])
         }
     }
-    def fileExists(String filePath) {
-        def file = new File(filePath)
-        return file.exists()
+}
+
+// Function to check if a file or folder exists
+def fileExists(String path) {
+    return file(path).exists()
+}
+
+// Function to cleanup folders
+def cleanupFolders(List<String> folders) {
+    // Loop through each folder
+    folders.each { targetFolder ->
+        // Check if the folder exists before attempting cleanup
+        if (fileExists(targetFolder)) {
+            sh "rm -rf ${targetFolder}"
+            echo "Cleanup for ${targetFolder} completed successfully."
+        } else {
+            echo "Folder ${targetFolder} does not exist. No cleanup needed."
+        }
     }
 }
