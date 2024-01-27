@@ -13,6 +13,11 @@ pipeline {
                 script {
                     def repoDir = 'TorrentVisitor'
                     def repoExists = fileExists(repoDir)
+                    
+                    echo '*************'
+                    echo 'before'
+                    sh 'whoami && pwd'
+                    echo '*************'
 
                     if (!repoExists) {
                         echo "Cloning the Git repository..."
@@ -24,6 +29,7 @@ pipeline {
                     }
 
                     echo '*************'
+                    echo 'after'
                     sh 'whoami && pwd'
                     echo '*************'
                 }
@@ -33,7 +39,15 @@ pipeline {
         stage('Create Virtual Environment') {
             steps {
                 script {
+                    echo '*************'
+                    echo 'before'
+                    sh 'whoami && pwd'
+                    echo '*************'
                     dir('TorrentVisitor') {
+                        echo '*************'
+                        echo 'after'
+                        sh 'whoami && pwd'
+                        echo '*************'
                         // Install pip if not already installed
                         def pipInstalled = sh(script: 'command -v pip', returnStatus: true) == 0
                         if (!pipInstalled) {
@@ -44,7 +58,7 @@ pipeline {
                         sh 'python3 -m venv TorrentVisitor/venv'
                         sh 'ls -lha'
                         // Activate the virtual environment
-                        sh 'source TorrentVisitor/venv/bin/activate'
+                        sh 'source TorrentVisitor/TorrentVisitor/venv/bin/activate'
 
                         // Install requirements.txt within the virtual environment
                         sh 'pip3 install -r TorrentVisitor/requirements.txt'
@@ -56,7 +70,15 @@ pipeline {
         stage('Run') {
             steps {
                 script {
+                    echo '*************'
+                    echo 'before'
+                    sh 'whoami && pwd'
+                    echo '*************'
                     dir('TorrentVisitor') {
+                        echo '*************'
+                        echo 'after'
+                        sh 'whoami && pwd'
+                        echo '*************'
                         sh "python3 main.py"
                     }
                 }
