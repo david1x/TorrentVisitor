@@ -47,11 +47,6 @@ pipeline {
         stage('Cleanup') {
             steps {
                 script {
-                    def fileExists(String filePath) {
-                        def file = new File(filePath)
-                        return file.exists()
-                    }
-                    
                     def folders = [
                         '/tmp/workspace/TorrentHeadless',
                         '/tmp/workspace/TorrentHeadless@tmp'
@@ -77,5 +72,9 @@ pipeline {
         always {
             cleanWs()
         }
+    }
+    def fileExists(String filePath) {
+        def file = new File(filePath)
+        return file.exists()
     }
 }
