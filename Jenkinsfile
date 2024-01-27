@@ -40,7 +40,7 @@ pipeline {
             steps {
                 script {
                     dir('TorrentVisitor') {
-                        sh 'env | grep TOR'
+                        sh 'env | grep TOR_'
                         sh "python3 main.py"
                     }
                 }
