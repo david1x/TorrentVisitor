@@ -30,22 +30,22 @@ pipeline {
         stage('Create Virtual Environment') {
             steps {
                 script {
-                    dir('TorrentVisitor') {
-                        // Install pip if not already installed
-                        def pipInstalled = sh(script: 'command -v pip', returnStatus: true) == 0
-                        if (!pipInstalled) {
-                            sh 'sudo apt-get update && sudo apt-get install -y python3-pip'
-                        }
-
-                        // Create a virtual environment in the TorrentVisitor directory
-                        sh 'python3 -m venv venv'
-                        sh 'ls -lha'
-                        // Activate the virtual environment
-                        sh '. venv/bin/activate'
-
-                        // Install requirements.txt within the virtual environment
-                        sh 'pip3 install -r requirements.txt'
+                    // dir('TorrentVisitor') {
+                    // Install pip if not already installed
+                    def pipInstalled = sh(script: 'command -v pip', returnStatus: true) == 0
+                    if (!pipInstalled) {
+                        sh 'sudo apt-get update && sudo apt-get install -y python3-pip'
                     }
+
+                    // Create a virtual environment in the TorrentVisitor directory
+                    sh 'python3 -m venv venv'
+                    sh 'ls -lha'
+                    // Activate the virtual environment
+                    sh '. venv/bin/activate'
+
+                    // Install requirements.txt within the virtual environment
+                    sh 'pip3 install -r requirements.txt'
+                    // }
                 }
             }
         }
@@ -53,9 +53,9 @@ pipeline {
         stage('Run') {
             steps {
                 script {
-                    dir('TorrentVisitor') {
-                        sh "python3 main.py"
-                    }
+                    // dir('TorrentVisitor') {
+                    sh "python3 main.py"
+                    // }
                 }
             }
         }
