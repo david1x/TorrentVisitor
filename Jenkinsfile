@@ -1,3 +1,4 @@
+properties([pipelineTriggers([cron('20 11,14,18 * * *')])])
 pipeline {
     agent { label 'ubuntu' }
 
