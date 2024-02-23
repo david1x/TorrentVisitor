@@ -1,5 +1,5 @@
 selenium==4.8.2
 async-generator==1.10
 pyotp==2.9.0
-python-dotenv==1.0.1
+python-dotenv
 webdriver_manager==4.0.1
