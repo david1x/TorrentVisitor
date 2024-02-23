@@ -12,17 +12,17 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    def repoDir = 'TorrentVisitor'
+                    def repoDir = 'TorrentHeadless'
                     def repoExists = fileExists(repoDir)
                     def pipInstalled = sh(script: 'command -v pip', returnStatus: true) == 0
 
                     if (!repoExists) {
                         echo "Cloning the Git repository..."
-                        sh 'git clone https://github.com/david1x/TorrentVisitor.git'
+                        sh 'git clone https://gitea.amarsphere.com/davidamar/TorrentHeadless.git'
                     } else {
                         echo "Repository already exists. Removing existing repository and cloning a fresh copy."
                         sh "rm -rf ${repoDir}"
-                        sh 'git clone https://github.com/david1x/TorrentVisitor.git'
+                        sh 'git clone https://gitea.amarsphere.com/davidamar/TorrentHeadless.git'
                     }
                 }
             }
@@ -31,14 +31,14 @@ pipeline {
         stage('Create Virtual Environment') {
             steps {
                 script {
-                    dir('TorrentVisitor') {
+                    dir('TorrentHeadless') {
                         // Install pip if not already installed
                         def pipInstalled = sh(script: 'command -v pip', returnStatus: true) == 0
                         if (!pipInstalled) {
                             sh 'sudo apt-get update && sudo apt-get install -y python3-pip'
                         }
     
-                        // Create a virtual environment in the TorrentVisitor directory
+                        // Create a virtual environment in the TorrentHeadless directory
                         sh 'python3 -m venv venv'
     
                         // Activate the virtual environment
@@ -54,7 +54,7 @@ pipeline {
 
         stage('Run') {
             steps {
-                dir('TorrentVisitor') {
+                dir('TorrentHeadless') {
                     script {
                         // Use double quotes to interpolate variables
                         sh "python3 main.py"
@@ -67,7 +67,7 @@ pipeline {
         stage('Cleanup') {
             steps {
                 script {
-                    def repoDir = 'TorrentVisitor'
+                    def repoDir = 'TorrentHeadless'
                     sh 'pwd'
                     echo "Deleting Running Folder..."
                     sh "rm -rf ${repoDir}"
