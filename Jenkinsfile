@@ -67,6 +67,7 @@ pipeline {
         stage('Cleanup') {
             steps {
                 script {
+                    sh 'pwd'
                     def repoDir = 'TorrentHeadless'
                     sh 'pwd'
                     echo "Deleting Running Folder..."
