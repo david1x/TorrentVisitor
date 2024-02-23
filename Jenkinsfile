@@ -31,7 +31,7 @@ pipeline {
         stage('Create Virtual Environment') {
             steps {
                 script {
-                    dir('TorrentHeadless') {
+                    // dir('TorrentHeadless') {
                         // Install pip if not already installed
                         def pipInstalled = sh(script: 'command -v pip', returnStatus: true) == 0
                         if (!pipInstalled) {
@@ -46,7 +46,7 @@ pipeline {
     
                         // Install requirements.txt within the virtual environment
                         sh 'sudo pip3 install -r requirements.txt'
-                    }
+                    // }
                     
                 }
             }
@@ -54,13 +54,13 @@ pipeline {
 
         stage('Run') {
             steps {
-                dir('TorrentHeadless') {
+                // dir('TorrentHeadless') {
                     script {
                         // Use double quotes to interpolate variables
                         sh "python3 main.py"
                     }
                     
-                }
+                // }
             }
         }
 
