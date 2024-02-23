@@ -66,36 +66,37 @@ pipeline {
 
         stage('Cleanup') {
             steps {
-                script {
-                    sh 'pwd'
-                    def repoDir = '/temp/workspace/TorrentHeadless'
-                    sh 'pwd'
-                    echo "Deleting Running Folder..."
-                    sh "rm -rf ${repoDir}"
-                    sh "rm -rf ${repoDir}@tmp"
-                }
+                deleteDir()
+                // script {
+                //     sh 'pwd'
+                //     def repoDir = '/temp/workspace/TorrentHeadless'
+                //     sh 'pwd'
+                //     echo "Deleting Running Folder..."
+                //     sh "rm -rf ${repoDir}"
+                //     sh "rm -rf ${repoDir}@tmp"
+                // }
             }
         }
     }
 
-    post {
-        always {
-            script {
-                // Check if virtual environment is activated before deactivating
-                if (sh(script: '[[ -n "$VIRTUAL_ENV" ]]', returnStatus: true) == 0) {
-                    sh 'deactivate'
-                    echo 'Deactivated the virtual environment.'
-                } else {
-                    echo 'No virtual environment is currently activated. Skipping deactivation.'
-                }
-                cleanWs(cleanWhenNotBuilt: false,
-                        deleteDirs: true,
-                        disableDeferredWipeout: true,
-                        notFailBuild: true,
-                        patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
-                                   [pattern: '.propsfile', type: 'EXCLUDE']])
-            }
-        }
-    }
+    // post {
+    //     always {
+    //         script {
+    //             // Check if virtual environment is activated before deactivating
+    //             if (sh(script: '[[ -n "$VIRTUAL_ENV" ]]', returnStatus: true) == 0) {
+    //                 sh 'deactivate'
+    //                 echo 'Deactivated the virtual environment.'
+    //             } else {
+    //                 echo 'No virtual environment is currently activated. Skipping deactivation.'
+    //             }
+    //             cleanWs(cleanWhenNotBuilt: false,
+    //                     deleteDirs: true,
+    //                     disableDeferredWipeout: true,
+    //                     notFailBuild: true,
+    //                     patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
+    //                                [pattern: '.propsfile', type: 'EXCLUDE']])
+    //         }
+    //     }
+    // }
 }
 
