@@ -68,7 +68,7 @@ pipeline {
             steps {
                 script {
                     sh 'pwd'
-                    def repoDir = 'TorrentHeadless'
+                    def repoDir = '/temp/workspace/TorrentHeadless'
                     sh 'pwd'
                     echo "Deleting Running Folder..."
                     sh "rm -rf ${repoDir}"
