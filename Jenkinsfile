@@ -9,24 +9,24 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                script {
-                    def repoDir = 'TorrentHeadless'
-                    def repoExists = fileExists(repoDir)
-                    def pipInstalled = sh(script: 'command -v pip', returnStatus: true) == 0
+        // stage('Checkout') {
+        //     steps {
+        //         script {
+        //             def repoDir = 'TorrentHeadless'
+        //             def repoExists = fileExists(repoDir)
+        //             def pipInstalled = sh(script: 'command -v pip', returnStatus: true) == 0
 
-                    if (!repoExists) {
-                        echo "Cloning the Git repository..."
-                        sh 'git clone https://gitea.amarsphere.com/davidamar/TorrentHeadless.git'
-                    } else {
-                        echo "Repository already exists. Removing existing repository and cloning a fresh copy."
-                        sh "rm -rf ${repoDir}"
-                        sh 'git clone https://gitea.amarsphere.com/davidamar/TorrentHeadless.git'
-                    }
-                }
-            }
-        }
+        //             if (!repoExists) {
+        //                 echo "Cloning the Git repository..."
+        //                 sh 'git clone https://gitea.amarsphere.com/davidamar/TorrentHeadless.git'
+        //             } else {
+        //                 echo "Repository already exists. Removing existing repository and cloning a fresh copy."
+        //                 sh "rm -rf ${repoDir}"
+        //                 sh 'git clone https://gitea.amarsphere.com/davidamar/TorrentHeadless.git'
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Create Virtual Environment') {
             steps {
