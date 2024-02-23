@@ -45,7 +45,7 @@ pipeline {
                         sh '. venv/bin/activate'
     
                         // Install requirements.txt within the virtual environment
-                        sh 'pip3 install -r requirements.txt'
+                        sh 'sudo pip3 install -r requirements.txt'
                     }
                     
                 }
