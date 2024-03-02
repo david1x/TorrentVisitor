@@ -54,7 +54,13 @@ class Website:
         logging.error("Browser is not open")
         return False
 
-
+    def getNumberOfDaysVisited(self) -> str:
+        logging.info("Getting The number of days user has visited TorrentLeech")
+        preNumOfDays: str = self.driver.find_element(By.XPATH, self.elements['numDaysVisit']).text
+        numOfDays: str = preNumOfDays.split(" / ")[0]
+        return numOfDays
+        
+        
 @dataclass
 class Credential:
     username: str
@@ -122,7 +128,8 @@ def main() -> None:
         elements={
             'otp':'//*[@id="prefcode"]/input[1]',
             'login-btn':'//*[@id="site-canvas"]/div[2]/div/div/section/form/div[2]/button',
-            'otp-auth-error-check':'//*[@id="site-canvas"]/div[2]/div[1]/div/section/p'
+            'otp-auth-error-check':'//*[@id="site-canvas"]/div[2]/div[1]/div/section/p',
+            'numDaysVisit': '/html/body/div[6]/div/div/div/div[3]/div/div/div/table/tbody/tr[15]/td[3]'
         },
         driver=driver
     )
@@ -153,6 +160,8 @@ def main() -> None:
     logging.info(f'Loading Final URL: {website.urls[1]} to driver')
     driver.get(website.urls[1])
     logging.info(f'URL: {driver.current_url} loaded successfully')
+    
+    logging.info(f"Current Number of days visited on TorrentLeech: {website.getNumberOfDaysVisited()}")
     
     driver.refresh()
     driver.quit()
