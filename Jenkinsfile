@@ -46,6 +46,13 @@ pipeline {
             }
         }
     }
+    post{
+        failure{
+            emailext to: "duduammar@gmail.com",
+            subject: "[${currentBuild.currentResult}] Jenkins Build: ${env.JOB_NAME}",
+            body: "${currentBuild.currentResult}: Job ${env.JOB_NAME}\nMore Info can be found here: ${env.BUILD_URL}"
+        }
+    }
 
 }
 
