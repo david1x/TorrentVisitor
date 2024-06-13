@@ -129,7 +129,7 @@ def main() -> None:
             'otp':'//*[@id="prefcode"]/input[1]',
             'login-btn':'//*[@id="site-canvas"]/div[2]/div/div/section/form/div[2]/button',
             'otp-auth-error-check':'//*[@id="site-canvas"]/div[2]/div[1]/div/section/p',
-            'numDaysVisit': '/html/body/div[5]/div/div/div/div[3]/div/div/div/table/tbody/tr[15]/td[3]'
+            'numDaysVisit': '/html/body/div[5]/div/div/div/div[3]/div/div/div/table/tbody/tr[16]/td[3]'
             },
         driver=driver
     )
