@@ -56,7 +56,13 @@ class Website:
 
     def getNumberOfDaysVisited(self) -> str:
         logging.info("Getting The number of days user has visited TorrentLeech")
-        preNumOfDays: str = self.driver.find_element(By.XPATH, self.elements['numDaysVisit']).text
+        try:
+            preNumOfDays: str = self.driver.find_element(By.XPATH, self.elements['numDaysVisit']).text
+        except:
+            logging.error(f"Couldn't find the requested element: {self.elements['numDaysVisit'].text}")
+            
+        finally:
+            preNumOfDays: str = self.driver.find_element(By.XPATH, self.elements['numDaysVisit2']).text
         numOfDays: str = preNumOfDays.split(" / ")[0]
         return numOfDays
         
@@ -129,7 +135,8 @@ def main() -> None:
             'otp':'//*[@id="prefcode"]/input[1]',
             'login-btn':'//*[@id="site-canvas"]/div[2]/div/div/section/form/div[2]/button',
             'otp-auth-error-check':'//*[@id="site-canvas"]/div[2]/div[1]/div/section/p',
-            'numDaysVisit': '/html/body/div[5]/div/div/div/div[3]/div/div/div/table/tbody/tr[16]/td[3]'
+            'numDaysVisit': '/html/body/div[5]/div/div/div/div[3]/div/div/div/table/tbody/tr[16]/td[3]',
+            'numDaysVisit2': '/html/body/div[6]/div/div/div/div[3]/div/div/div/table/tbody/tr[16]/td[3]'
             },
         driver=driver
     )
