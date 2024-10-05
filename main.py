@@ -59,9 +59,7 @@ class Website:
         try:
             preNumOfDays: str = self.driver.find_element(By.XPATH, self.elements['numDaysVisit']).text
         except:
-            logging.error(f"Couldn't find the requested element: {self.elements['numDaysVisit'].text}")
-            
-        finally:
+            logging.error(f"Couldn't find the requested element")
             preNumOfDays: str = self.driver.find_element(By.XPATH, self.elements['numDaysVisit2']).text
         numOfDays: str = preNumOfDays.split(" / ")[0]
         return numOfDays
