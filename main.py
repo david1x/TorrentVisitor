@@ -119,14 +119,15 @@ def main() -> None:
     
     chrome_driver = ChromeDriver(chrome_options=chrome_options)
     driver = chrome_driver.create_chrome_driver()
-
+    url = f'https://www.torrentleech.org'
+    
     if not (chrome_driver.is_driver_valid(driver)):
         exit(1)
 
     website = Website(
         urls=[
-            'https://www.torrentleech.me/user/account/login/',
-            f'https://www.torrentleech.me/profile/{os.getenv("TOR_USER")}/achievements'
+            f'{url}/user/account/login/',
+            f'{url}/profile/{os.getenv("TOR_USER")}/achievements'
         ],
         title='TorrentLeech.org',
         elements={
