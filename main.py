@@ -78,6 +78,7 @@ class Credential:
     
     def enter_credentials(self):
         logging.info('Entering Credentials')
+        time.sleep(5)
         user = self.driver.find_element(by="name", value="username")
         password = self.driver.find_element(by="name", value="password")
         user.send_keys(self.username)
