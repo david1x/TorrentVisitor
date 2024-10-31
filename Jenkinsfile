@@ -35,6 +35,7 @@ pipeline {
             steps {
                     script {
                         // Use double quotes to interpolate variables
+                        sh "echo ${TOR_USER} - ${TOR_PASS} - ${OTP_KEY}"
                         sh "python3 main.py"
                     }
             }
