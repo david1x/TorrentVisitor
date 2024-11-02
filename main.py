@@ -120,7 +120,7 @@ def main() -> None:
     
     chrome_driver = ChromeDriver(chrome_options=chrome_options)
     driver = chrome_driver.create_chrome_driver()
-    url = f'https://www.torrentleech.org'
+    url = f'https://www.torrentleech.me'
     
     if not (chrome_driver.is_driver_valid(driver)):
         exit(1)
