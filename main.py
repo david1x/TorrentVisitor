@@ -5,6 +5,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium import webdriver
+from telegram import send_telegram_message
 from datetime import datetime
 from dataclasses import dataclass
 from dotenv import load_dotenv
@@ -17,6 +18,9 @@ import os
 logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s', level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S')
 
 load_dotenv()
+TLG_ID = os.getenv('TLG_ID')
+BOT_TOKEN = os.getenv('BOT_TOKEN')
+TLG_MESSAGE = '❌ TorrentLeech Script Failed. Please Check the Logs.'
 
 @dataclass
 class ChromeDriver:
@@ -62,7 +66,7 @@ class Website:
         logging.info("Getting The number of days user has visited TorrentLeech")
         try:
             preNumOfDays: str
-            cells = self.driver.find_element(By.XPATH, self.elements['numDaysVisit'])
+            cells = self.driver.find_elements(By.XPATH, self.elements["numDaysVisit"])
             matches = []
             for cell in cells:
                 text = cell.text.strip()
@@ -75,13 +79,16 @@ class Website:
 
             else:
                 logging.error("No matching values found.")
+                send_telegram_message(bot_token=BOT_TOKEN, chat_id=[TLG_ID], message=TLG_MESSAGE)
                 exit(1)
                 
-        except:
+        except Exception as e:
             logging.error(f"Couldn't find the requested element. Trying Again with a different element")
+            logging.error(e)
             # preNumOfDays: str = self.driver.find_element(By.XPATH, self.elements['numDaysVisit']).text
-        numOfDays: str = preNumOfDays.split(" / ")[0]
-        return numOfDays
+        if preNumOfDays != None:
+            numOfDays: str = preNumOfDays.split(" / ")[0]
+        return numOfDays or []
         
         
 @dataclass
@@ -140,7 +147,7 @@ def main() -> None:
     chrome_options.add_argument('--headless')  # Add this line for headless mode
     # if chrome_options.headless:
         # logging.info('This script is running in headless mode')
-    
+
 
     
     chrome_driver = ChromeDriver(chrome_options=chrome_options)
@@ -148,6 +155,7 @@ def main() -> None:
     url = f'https://www.torrentleech.me'
     
     if not (chrome_driver.is_driver_valid(driver)):
+        send_telegram_message(bot_token=BOT_TOKEN, chat_id=[TLG_ID], message=TLG_MESSAGE)
         exit(1)
 
     website = Website(
@@ -188,6 +196,7 @@ def main() -> None:
     if not (website.isBrowserAlive()):
         logging.error("Driver was closed for unknown reason.")
         logging.error("Terminating program.")
+        send_telegram_message(bot_token=BOT_TOKEN, chat_id=[TLG_ID], message=TLG_MESSAGE)
         exit(1)
         
     logging.info(f'Loading Final URL: {website.urls[1]} to driver')
@@ -204,3 +213,4 @@ def main() -> None:
     
 if __name__ == "__main__":
     main()
+    
