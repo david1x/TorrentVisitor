@@ -1,11 +1,11 @@
 # .github/workflows/run-main.yml
 name: Run main.py
-on:
-  schedule:
-    - cron: '0 0/6 * * *'
-  push:
-    branches:
-      - main  # or your default branch
+# on:
+#   schedule:
+#     - cron: '0 0/6 * * *'
+#   push:
+#     branches:
+#       - main  # or your default branch
 
 jobs:
   run-python:
